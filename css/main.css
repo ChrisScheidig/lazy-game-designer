@@ -1,4 +1,7 @@
 
+
+
+
 .dragtest {
     border-style: solid;
     border-color: rgb(136,199,201);
@@ -19,11 +22,17 @@
     user-select: none;
 }
 
+.symbol {
+    font-size: 4vw;
+}
+
 .circleBase {
     border-radius: 50%;
 }
 
 body {
+
+   font-family: "Noto Sans", "Noto Sans CJK JP", sans-serif;
 
    background: -webkit-linear-gradient(top, rgb(136,199,201) 58%, rgb(202,232,235) 100%);
 
@@ -43,7 +52,6 @@ body {
 
 .paper {
 
-  font: normal 12px/1.5 "Lucida Grande", arial, sans-serif;
 
   width: 50%;
 

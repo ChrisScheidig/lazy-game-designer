@@ -13,55 +13,43 @@ define(function (require) {
     }
 
     function init() {
+
         counter = 0;
 
-        let obj1 = objGen.createObject( {
-            type:"card",x:100,y:100,
-            /// Content ist abhängig vom Objecttyp!
-            content: {
-                text:"eine ganz besondere Karte"
-            }
-        });
-        makeDraggable(obj1);
-
-        let obj2 = objGen.createObject( {
-            type:"chip",x:300,y:100,
-            /// Content ist abhängig vom Objecttyp!
-            content: {
-            }
-        });
-        makeDraggable(obj2);
-
-        let obj3 = objGen.createObject( {
-            type:"card",x:200,y:300,
-            /// Content ist abhängig vom Objecttyp!
-            content: {
-                text:"Eine langweilige Karte"
-            }
-        });
-        makeDraggable(obj3);
- 
-        let obj4 = objGen.createObject( {
-            type:"card",x:250,y:300,
-            /// Content ist abhängig vom Objecttyp!
-            content: {
-                text:"SCHATZKARTE???"
-            }
-        });
-        makeDraggable(obj4);
-
-
-        var testObj = {
-            value:1,
-            objects: [
-                {id:2},
-                {id:3},
-                {id:4}
+        /// First: Register Card types for our game. This should be
+        /// outsourced to data later on
+        objGen.registerObject( {
+            type:"cg1_level1",
+            size:{w:150,h:200},
+            elements: [
+                {name:"text_1", type:"text", size:'1em',y:55},
+                {name:"cost_symbol", type:"symbol", value:'&#9673', x:50, y:10, size:'4em', color:'black'},
+                {name:"cost", type:"text", x:67, y:12, size:'1em', color:'white'}                            
             ]
-        }
+        });
 
-        console.log( JSON.stringify(testObj));
+        /// Second: Create our content, the real cards for the game
+        /// from our registered templates!
+        let card = objGen.createObject( {
+            /// our registered template
+            type:"cg1_level1",
+            /// here: template related values to be set!
+            data: [
+                {name:"cost", value:'10'},
+                {name:"text_1", value:"Dies ist eine generierte Karte"}               
+            ]
+        });
+        makeDraggable(card);
 
+        let card2 = objGen.createObject( {
+            /// our registered template
+            type:"cg1_level1",
+            /// here: template related values to be set!
+            data: [   
+                {name:"cost", value:'2'}                    
+            ]
+        });
+        makeDraggable(card2);
     }
 
     init();

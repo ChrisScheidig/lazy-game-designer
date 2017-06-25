@@ -1,21 +1,93 @@
 define(function () {
+    
 
     let counter = 0;
 
     let playground = document.getElementById('playground');
 
-    let objectDefs = [];
+    let objectDefs = new Map();
 
-    let createBaseObject = function(base, content) {
+    //let createElement = function 
+
+    let createElement = function(data, sub) {
+        let obj = undefined;      
+        sub = sub ||{};
+        if ( el.type === 'symbol' ||el.type === 'text') {
+            obj = document.createElement('div');
+            obj.style.position = 'absolute'
+            obj.style.fontSize = sub.size || data.size;
+            obj.style.left = sub.x || data.x;    
+            obj.style.top = sub.y || data.y;             
+            obj.style.color = sub.color || data.color || 'black';
+            obj.innerHTML = sub.value || data.value;   
+            obj.className = 'unselectable symbol';
+        }
+        else if ( el.type === 'text') {
+
+        }
+        return obj;
+    };
+
+    let createBaseObject = function(base, content, isSub = false) {
 
         let obj = undefined;
 
-        if ( base === "card") {
+
+        /// get template
+        let templ = objectDefs.get(base);
+        if ( templ !== undefined) {
+            // create from base!
+            obj = document.createElement('div');     
+            obj.className = 'dragtest unselectable';
+            obj.style.width = templ.size.w;
+            obj.style.height = templ.size.h;    
+
+            for (el of templ.elements) {
+
+                // look for overwriting data!
+                let data = undefined;
+                for( dat of content.data) {
+                    if ( dat.name === el.name)
+                        data = dat;
+                }
+
+                let sub = createElement(el, data);
+                if (sub !== undefined)
+                obj.appendChild(sub);
+            }               
+        }
+        else {
+
+        }
+
+/*
+        if ( base ==="symbol") {
+
+            obj = document.createElement('div');
+            obj.style.position = 'absolute'
+            obj.style.width = 10;
+            obj.style.height = 10;
+            obj.style.fontSize = content.fontSize;
+            obj.style.left = content.x;    
+            obj.style.top = content.y;             
+            obj.style.color = content.color || 'black';
+            obj.innerHTML = content.face; 
+            
+            obj.className = 'unselectable symbol';
+        }
+        else if ( base === "card") {
             
             obj = document.createElement('div');
             obj.className = 'dragtest unselectable';
             obj.style.width = 100;
             obj.style.height = 150;
+
+            obj.appendChild( createBaseObject( "symbol", {
+                    face: '&#9673', fontSize:'3em', x: 65, y:5
+                }, true ));
+            obj.appendChild( createBaseObject( "symbol", {
+                    face: getRandomInt(0,30), fontSize:'1em', x: 75, y:5, color:'white'
+                }, true ));
 
             /// content
             let p = document.createElement('p');
@@ -31,11 +103,14 @@ define(function () {
             obj.style.height = 100;
 
         }  
+        */
 
         if (obj) {
-            obj.style.position = 'absolute';            
-            obj.id = `FieldObject_${counter++}`;
-            playground.appendChild(obj);
+            obj.style.position = 'absolute';    
+            if ( !isSub) {        
+                obj.id = `FieldObject_${counter++}`;
+                playground.appendChild(obj);
+            }
         }
         return obj;
     };
@@ -48,12 +123,14 @@ define(function () {
 
     ////// Public interface //////
     return {
-        registerObject: function(def) {
 
+        registerObject: function(def) {
+            objectDefs.set(def.type, def);
         },
         createObject: function (data) {
        
-            let newObject = createBaseObject(data.type || 'card', data.content);
+            let newObject = createBaseObject(data.type, data);
+
             newObject.style.top = data.y || 0;
             newObject.style.left = data.x || 0;
             newObject.style.transform = `rotate(${getRandomInt(-5,5)}deg)`;
