@@ -6,7 +6,7 @@ define(function (require) {
         y_pos = 0;
 
     var objGen = require('./objectGenerator');
-    var makeDraggable = require('./draggable');
+
 
     let playfield = {
         objects:[]
@@ -27,29 +27,51 @@ define(function (require) {
                 {name:"cost", type:"text", x:67, y:12, size:'1em', color:'white'}                            
             ]
         });
+        objGen.registerObject( {
+            type:"sj_card",
+            size:{w:150,h:200},
+            elements: [
+                {name:"caption", type:"text", value:"?", size:'1em',x:40,y:10},
+                {name:"costs", type:"text", value:"0", size:'2.5em',x:10,y:10},
+                {name:"costs2", type:"text", value:"0", size:'2.5em',x:120,y:10},  
+                {name:"text", type:"text", value:"?", size:'0.7em',x:10,y:80},
+                {name:"fooder", type:"text", value:"?", size:'1em',x:20,y:175}                                                                                              
+            ]
+        });        
+
+        let stapple = objGen.createCardStack(
+            ["sj_card"],
+            {x:200,y:200}
+        );
+        let stappleId = stapple.id;
 
         /// Second: Create our content, the real cards for the game
         /// from our registered templates!
         let card = objGen.createObject( {
             /// our registered template
             type:"cg1_level1",
+            stack:stappleId,            
             /// here: template related values to be set!
             data: [
                 {name:"cost", value:'10'},
                 {name:"text_1", value:"Dies ist eine generierte Karte"}               
             ]
         });
-        makeDraggable(card);
 
         let card2 = objGen.createObject( {
             /// our registered template
-            type:"cg1_level1",
+            type:"sj_card",
+            stack:stappleId,
             /// here: template related values to be set!
-            data: [   
-                {name:"cost", value:'2'}                    
+            data: [  
+                {name:"caption",value:"Stadthalle"},
+                {name:"costs",value:"3"},
+                {name:"costs2",value:"3"},
+                {name:"text",value:"Ziehe 3 Karten und lege 2 Karten aus der Hand ab. Effekt gilt nur einmal pro Zug."},
+                {name:"fooder",value:"2 Siegpunkte"}                                                         
             ]
         });
-        makeDraggable(card2);
+        //makeDraggable(card2.div);
     }
 
     init();
