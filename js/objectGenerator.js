@@ -50,7 +50,8 @@ define(function (require) {
             let detachObj = this.objects.pop();
            
             if ( detachObj !== undefined) {
-                playground.appendChild(detachObj.div);    
+                playground.appendChild(detachObj.div);   
+                if (this.flipped) detachObj.flip(); 
                 detachObj.div.style.top = this.div.style.top;
                 detachObj.div.style.left = this.div.style.left;   
             }
@@ -171,6 +172,7 @@ define(function (require) {
             newStack.allowedTypes = types;
             newStack.name = `FieldObject_${counter++}`;
             newStack.id = counter;
+            newStack.flipped = data.flipped ? true : false;
             objects.push(newStack);
 
             let [obj3] = createBaseObject( types[0],{}, true );
@@ -270,6 +272,8 @@ define(function (require) {
                 if ( obj !== undefined) {
                     //console.log("stack onto:" + obj.id);
                     /// Object will now be HIDDEN!
+                    if (obj.flipped)
+                        container.flip();
                     obj.placeOnTop(container);
 
                 }

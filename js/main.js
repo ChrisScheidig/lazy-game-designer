@@ -41,7 +41,7 @@ define(function (require) {
 
         let stapple = objGen.createCardStack(
             ["sj_card"],
-            {x:200,y:200}
+            {x:200,y:200, flipped:true}
         );
         let stappleId = stapple.id;
 
