@@ -5,7 +5,8 @@ define(function (require) {
     var x_pos = 0,
         y_pos = 0;
 
-    var objGen = require('./objectGenerator');
+    let objGen = require('./objectGenerator');
+    let util = require('./util');
 
 
     let playfield = {
@@ -64,7 +65,7 @@ define(function (require) {
 
         /// Second: Create our content, the real cards for the game
         /// from our registered templates!
-        let card = objGen.createObject( {
+        let card = objGen.create( {
             /// our registered template
             type:"cg1_level1",
             stack:stappleId,            
@@ -75,7 +76,7 @@ define(function (require) {
             ]
         });
 
-        let card2 = objGen.createObject( {
+        let card2 = objGen.create( {
             /// our registered template
             type:"sj_card",
             stack:stappleId,
@@ -89,7 +90,7 @@ define(function (require) {
             ]
         });
 
-        let card_torch = objGen.createObject( {
+        let card_torch = objGen.create( {
             /// our registered template
             type:"cg1_torch",           
             /// here: template related values to be set!
@@ -100,7 +101,8 @@ define(function (require) {
             ]
         });
 
-        let coal_coin = objGen.createObject( {type:"cg1_oil"});
+        let coal_coins = objGen.create( {type:"cg1_oil", x:200, y:300}, 10);
+        util.randomCirclePlacement(coal_coins,50);
         //makeDraggable(card2.div);
     }
 

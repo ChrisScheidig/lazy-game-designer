@@ -1,6 +1,7 @@
 define(function (require) {
     
-    var makeDraggable = require('./draggable');
+    let makeDraggable = require('./draggable');
+    let util = require('./util');
 
     let counter = 0;
     let playground = document.getElementById('playground');
@@ -176,11 +177,7 @@ define(function (require) {
         return [newObject,front,back];
     };
 
-    function getRandomInt(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min +1)) + min; 
-    }    
+
 
     ////// Public interface //////
     return {
@@ -211,7 +208,7 @@ define(function (require) {
 
             newStack.div.style.top = data.y || 0;
             newStack.div.style.left = data.x || 0;
-            newStack.div.style.transform = `rotate(${getRandomInt(-5,5)}deg)`;
+            newStack.div.style.transform = `rotate(${util.getRandomInt(-5,5)}deg)`;
 
             var menu = [{
                 name:  "Draw card",
@@ -239,6 +236,13 @@ define(function (require) {
             return newStack;
         },
 
+        create: function(data, count = 1) {
+            let created = [];
+            for( let i = 0; i < count; i++) {
+                created.push(this.createObject(data));
+            }
+            return created;
+        },
         createObject: function (data = {}) {
        
             let container = Object.create(gameObjectBase); // todo: inherent from some base?
@@ -258,7 +262,7 @@ define(function (require) {
 
             newObject.style.top = data.y || 0;
             newObject.style.left = data.x || 0;
-            newObject.style.transform = `rotate(${getRandomInt(-5,5)}deg)`;
+            newObject.style.transform = `rotate(${util.getRandomInt(-5,5)}deg)`;
 
             var menu = [{
                 name:  newObject.id,
