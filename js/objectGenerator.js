@@ -89,6 +89,20 @@ define(function (require) {
         else if ( el.type === 'text') {
 
         }
+        else if ( el.type === 'picture') {
+            console.log(sub);
+            obj = document.createElement('img');
+            obj.style.position = 'absolute'
+            obj.style.left = sub.x || data.x;    
+            obj.style.top = sub.y || data.y;
+            obj.style.width = sub.w || '100%';
+            obj.style.height = sub.h || '100%';
+            obj.src = `data/${sub.source || data.source}`;    
+            /// this does help preveting the ghost-drop in Chrome,
+            /// but not in firefox ...
+            obj.draggable = false; 
+            obj.className = 'unselectable symbol'; 
+        }
         return obj;
     };
 
@@ -105,6 +119,12 @@ define(function (require) {
             newObject = document.createElement('div'); 
 
             newObject.className = 'dragtest unselectable';
+            if ( templ.form) {
+                if ( templ.form === 'round')
+                    newObject.classList.add('circleBase');
+            }
+
+
             newObject.style.width = templ.size.w;
             newObject.style.height = templ.size.h;  
 
@@ -113,9 +133,11 @@ define(function (require) {
 
                     // look for overwriting data!
                     let data = undefined;
-                    for( dat of content.data) {
-                        if ( dat.name === el.name)
-                            data = dat;
+                    if ( content.data) {
+                        for( dat of content.data) {
+                            if ( dat.name === el.name)
+                                data = dat;
+                        }
                     }
 
                     let sub = createElement(el, data);
@@ -197,7 +219,7 @@ define(function (require) {
                 fun: function () {
 
                     let detObj = newStack.detachTop();                                
-                    if ( detObj ) makeDraggable(detObj.div);  
+                    if ( detObj ) makeDraggable(detObj.div,{startDragged:true});  
                     
                 }
             }, {
@@ -217,7 +239,7 @@ define(function (require) {
             return newStack;
         },
 
-        createObject: function (data) {
+        createObject: function (data = {}) {
        
             let container = Object.create(gameObjectBase); // todo: inherent from some base?
             container.front_objects = [];

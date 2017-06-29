@@ -1,6 +1,6 @@
  
  define(function () {
-     return  function (obj) {
+     return  function (obj, settings = {}) {
 
         let divMove = function(e) {
             obj.style.position = 'absolute';
@@ -17,8 +17,15 @@
             window.removeEventListener('mousemove',divMove,true);
         }   
 
+        if ( settings.startDragged) {
+            window.addEventListener('mousemove',divMove,true);            
+        }
+
         obj.addEventListener('mousedown',mouseDown,false);
         window.addEventListener('mouseup',mouseUp, false);
+
+
+
         return obj;
     }
  });

@@ -37,7 +37,24 @@ define(function (require) {
                 {name:"text", type:"text", value:"?", size:'0.7em',x:10,y:80},
                 {name:"fooder", type:"text", value:"?", size:'1em',x:20,y:175}                                                                                              
             ]
-        });        
+        });     
+        objGen.registerObject( {
+            type:"cg1_torch",
+            size:{w:200,h:200},
+            elements: [
+                {name:"pic", type:"picture", x:0, y:0, w:100,h:100},
+                {name:"cost_symbol", type:"symbol", value:'&#9673', x:50, y:10, size:'4em', color:'black'},
+                {name:"cost", type:"text", x:67, y:12, size:'1em', color:'white'}                            
+            ]
+        });   
+        objGen.registerObject( {
+            type:"cg1_oil",
+            form:'round',
+            size:{w:50,h:50},
+            elements: [
+                {name:"pic", type:"picture", x:0, y:0, w:100,h:100,source:'project1/oil1.png'}                      
+            ]
+        });   
 
         let stapple = objGen.createCardStack(
             ["sj_card"],
@@ -71,6 +88,19 @@ define(function (require) {
                 {name:"fooder",value:"2 Siegpunkte"}                                                         
             ]
         });
+
+        let card_torch = objGen.createObject( {
+            /// our registered template
+            type:"cg1_torch",           
+            /// here: template related values to be set!
+            data: [
+                {name:"cost", value:'10'},
+                {name:"text_1", value:"Dies ist eine generierte Karte"},
+                {name:"pic", source:'project1/torch1.png'}              
+            ]
+        });
+
+        let coal_coin = objGen.createObject( {type:"cg1_oil"});
         //makeDraggable(card2.div);
     }
 
