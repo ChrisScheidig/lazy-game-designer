@@ -15,6 +15,13 @@ define(function (require) {
             obj.div.style.top = parseInt(obj.div.style.top) + x;
             obj.div.style.left = parseInt(obj.div.style.left) + y;          
          }
-    }
+    },
+    /// from https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
+    shuffleArray: function(a) {
+        for (let i = a.length; i; i--) {
+            let j = Math.floor(Math.random() * i);
+            [a[i - 1], a[j]] = [a[j], a[i - 1]];
+        }
+    }    
   };
 });

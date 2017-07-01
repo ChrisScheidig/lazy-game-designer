@@ -46,6 +46,13 @@ define(function (require) {
             this.div.appendChild(obj.div);
 
         },
+        refresh() {
+            if ( this.front !== undefined) {
+                this.front.div.style.visibility = 'hidden';
+            }
+            this.front = this.objects[this.objects.length-1];
+            this.front.div.style.visibility = 'visible';              
+        },
         detachTop:function() {
               
             let detachObj = this.objects.pop();
@@ -96,8 +103,8 @@ define(function (require) {
             obj.style.position = 'absolute'
             obj.style.left = sub.x || data.x;    
             obj.style.top = sub.y || data.y;
-            obj.style.width = sub.w || '100%';
-            obj.style.height = sub.h || '100%';
+            obj.style.width = sub.w || data.w || '100%';
+            obj.style.height = sub.h || data.h || '100%';
             obj.src = `data/${sub.source || data.source}`;    
             /// this does help preveting the ghost-drop in Chrome,
             /// but not in firefox ...
@@ -210,6 +217,12 @@ define(function (require) {
             newStack.div.style.left = data.x || 0;
             newStack.div.style.transform = `rotate(${util.getRandomInt(-5,5)}deg)`;
 
+            newStack.shuffle = function() {
+                util.shuffleArray(newStack.objects);
+                newStack.refresh();
+
+            };
+
             var menu = [{
                 name:  "Draw card",
                 title: 'create button',
@@ -220,8 +233,11 @@ define(function (require) {
                     
                 }
             }, {
-                name: 'update',
-                title: 'update button'
+                name: 'shuffle',
+                title: 'Shuffle',
+                fun: function() {
+                    newStack.shuffle();
+                }
             }, {
                 name: 'delete',
                 title: 'create button',
