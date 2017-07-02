@@ -33,10 +33,15 @@ define(function (require) {
     };
 
     let stackBase = {
-        objects:[],
         front:undefined,
         placeOnTop:function(obj) {
             this.objects.push(obj);
+
+            obj.parent = this;
+            obj.lastParent = this;
+
+            if (this.flipped)
+                obj.flip();            
 
             if ( this.front !== undefined) {
                 this.front.div.style.visibility = 'hidden';
@@ -56,6 +61,7 @@ define(function (require) {
         detachTop:function() {
               
             let detachObj = this.objects.pop();
+            detachObj.parent = null;
            
             if ( detachObj !== undefined) {
                 playground.appendChild(detachObj.div);   
@@ -195,9 +201,11 @@ define(function (require) {
 
         createCardStack :function(types, data) {
             let newStack = Object.create(stackBase);
+            newStack.objects = [];
             newStack.allowedTypes = types;
-            newStack.name = `FieldObject_${counter++}`;
-            newStack.id = counter;
+            newStack.id = counter++;
+            console.log("created:" + newStack.id)
+            newStack.name = `FieldObject_${newStack.id}`;            
             newStack.flipped = data.flipped ? true : false;
             objects.push(newStack);
 
@@ -228,7 +236,8 @@ define(function (require) {
                 title: 'create button',
                 fun: function () {
 
-                    let detObj = newStack.detachTop();                                
+                    let detObj = newStack.detachTop(); 
+                    console.log("drawing from:" + newStack.id)                               
                     if ( detObj ) makeDraggable(detObj.div,{startDragged:true});  
                     
                 }
@@ -239,8 +248,17 @@ define(function (require) {
                     newStack.shuffle();
                 }
             }, {
-                name: 'delete',
-                title: 'create button',
+                name: 'Recollect (soft)',
+                title: 'Recollect (soft)',
+                fun:function() {
+
+                    for( obj of objects) {
+                        if ( obj.parent === null && obj.lastParent === newStack) {
+                            // get him back!
+                            newStack.placeOnTop(obj);
+                        }
+                    }
+                }
             }];
             //Calling context menu
             $(newStack.div).contextMenu(menu,{
@@ -264,6 +282,7 @@ define(function (require) {
             let container = Object.create(gameObjectBase); // todo: inherent from some base?
             container.front_objects = [];
             container.back_objects = [];  
+            container.parent = undefined;
             container.showFront = true;
 
 
@@ -272,8 +291,8 @@ define(function (require) {
             container.back_objects = back;
 
             container.div = newObject;
-            container.name = `FieldObject_${counter++}`;
-            container.id = counter;
+            container.id = counter++;
+            container.name = `FieldObject_${container.id}`;           
             objects.push(container);            
 
             newObject.style.top = data.y || 0;
@@ -314,8 +333,6 @@ define(function (require) {
                 if ( obj !== undefined) {
                     //console.log("stack onto:" + obj.id);
                     /// Object will now be HIDDEN!
-                    if (obj.flipped)
-                        container.flip();
                     obj.placeOnTop(container);
 
                 }
