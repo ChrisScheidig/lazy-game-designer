@@ -231,16 +231,38 @@ define(function (require) {
 
             };
 
-            var menu = [{
+            let drawCards = function(count) {
+                return {
+                        name:  `Draw ${count} cards`,
+                        title: 'draw',
+                        fun: function () {
+                        for( let i = 0; i < count; i++) {
+                            let detObj = newStack.detachTop();                            
+                            if ( detObj ) makeDraggable(detObj.div,{startDragged:true});  
+                        }
+                      }
+                };
+            };
+
+            var menu = [
+            {
                 name:  "Draw card",
                 title: 'create button',
                 fun: function () {
-
-                    let detObj = newStack.detachTop(); 
-                    console.log("drawing from:" + newStack.id)                               
+                    let detObj = newStack.detachTop();                           
                     if ( detObj ) makeDraggable(detObj.div,{startDragged:true});  
                     
                 }
+            },
+            {
+                name:  "Draw ...",
+                title: 'Draw',
+                subMenu: [
+                    drawCards(2),
+                    drawCards(3),                    
+                    drawCards(5),
+                    drawCards(10)
+                ]
             }, {
                 name: 'shuffle',
                 title: 'Shuffle',

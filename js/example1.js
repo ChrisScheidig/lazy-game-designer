@@ -102,10 +102,13 @@ define(function (require) {
         let coal_coins = objGen.create( {type:"cg1_oil", x:0, y:300}, 10);
         util.randomCirclePlacement(coal_coins,50);
 
-
+        let itemslvl1Stapple = objGen.createCardStack(
+            ["playercards_1"],
+            {x:800,y:50, flipped:true}
+        );
         let playerStapple = objGen.createCardStack(
             ["playercards_1"],
-            {x:900,y:100, flipped:true}
+            {x:100,y:700, flipped:true}
         );
         let dungeonStapple = objGen.createCardStack(
             ["dungeoncards_1"],
@@ -113,9 +116,9 @@ define(function (require) {
         );
 
 
-        createPlayerCard(playerStapple.id,10, 'project1/pickaxe.png', "Spitzhacke",
+        createPlayerCard(itemslvl1Stapple.id,10, 'project1/pickaxe.png', "Spitzhacke",
             "Ziehe 3 Karten und lege 2 Karten aus der Hand ab. Effekt gilt nur einmal pro Zug.");
-        createPlayerCard(playerStapple.id,10, 'project1/oil1.png', "Kleines Ölfläschchen",
+        createPlayerCard(itemslvl1Stapple.id,10, 'project1/oil1.png', "Kleines Ölfläschchen",
             "Erhöhe den Ölvorat um 2.");
 
         createDungeonCard(dungeonStapple.id,5, 'project1/gold1.png', "Goldader",
@@ -125,7 +128,7 @@ define(function (require) {
         createDungeonCard(dungeonStapple.id,4, 'project1/meal1.png', "Schneller Snack",
             "Ziehe 2 Karten.");
 
-        playerStapple.shuffle();
+        itemslvl1Stapple.shuffle();
         dungeonStapple.shuffle();
     };
 });
