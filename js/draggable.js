@@ -2,30 +2,50 @@
  define(function () {
      return  function (obj, settings = {}) {
 
+        let div = obj.div;
+
+        obj.forceDrag = function() {
+            window.addEventListener('mousemove',divMove,true); 
+        };
+
         let divMove = function(e) {
-            obj.style.position = 'absolute';
-            obj.style.top = (e.clientY - y_pos) + 'px';
-            obj.style.left = (e.clientX - x_pos) + 'px';
-            $(obj).contextMenu('close');    
-        }
+            div.style.position = 'absolute';
+            div.style.top = (e.clientY - y_pos) + 'px';
+            div.style.left = (e.clientX - x_pos) + 'px';
+            $(div).contextMenu('close');  
+
+            /// inefficient ...
+            if ( obj.onDrag) {
+                obj.onDrag(e);
+            }
+
+
+        };
         let mouseDown = function(e) {
-            x_pos = e.clientX - obj.offsetLeft;
-            y_pos = e.clientY - obj.offsetTop;
+
+            // discord mouseDown if this object is placed on a stack
+            if ( obj.parent != null) return;
+
+            x_pos = e.clientX -div.offsetLeft;
+            y_pos = e.clientY - div.offsetTop;
             window.addEventListener('mousemove',divMove,true);
         }
         let mouseUp = function() {
             window.removeEventListener('mousemove',divMove,true);
-        }   
+            if ( obj.onPlace) {
+                obj.onPlace();
+            }            
+        };
 
-        if ( settings.startDragged) {
-            window.addEventListener('mousemove',divMove,true);            
-        }
+        //if ( settings.startDragged) {
+        //    window.addEventListener('mousemove',divMove,true);            
+        //}
 
-        obj.addEventListener('mousedown',mouseDown,false);
+        div.addEventListener('mousedown',mouseDown,false);
         window.addEventListener('mouseup',mouseUp, false);
 
 
 
-        return obj;
+        return div;
     }
  });

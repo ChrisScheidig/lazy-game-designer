@@ -84,7 +84,12 @@ define(function (require) {
                 return obj;
         return undefined;
     };
-
+    let getObjectByDiv = function(div) {
+        for (obj of objects)
+            if( obj.div === div)
+                return obj;
+        return undefined;
+    };
     //let createElement = function 
 
     let createElement = function(data, sub) {
@@ -216,6 +221,7 @@ define(function (require) {
             obj2.style.top = obj2.style.left = 5;
             obj3.style.top = obj3.style.left = 5;
             newStack.div = obj1;
+            newStack.div.isStapple = true;
 
             obj3.className += " dark";
             obj2.className += " dark";
@@ -238,7 +244,7 @@ define(function (require) {
                         fun: function () {
                         for( let i = 0; i < count; i++) {
                             let detObj = newStack.detachTop();                            
-                            if ( detObj ) makeDraggable(detObj.div,{startDragged:true});  
+                            if ( detObj ) detObj.forceDrag(); 
                         }
                       }
                 };
@@ -249,8 +255,9 @@ define(function (require) {
                 name:  "Draw card",
                 title: 'create button',
                 fun: function () {
-                    let detObj = newStack.detachTop();                           
-                    if ( detObj ) makeDraggable(detObj.div,{startDragged:true});  
+                    let detObj = newStack.detachTop();    
+                    console.log(detObj);                       
+                    if ( detObj ) detObj.forceDrag();  
                     
                 }
             },
@@ -287,7 +294,7 @@ define(function (require) {
                 triggerOn:'contextmenu'
             });
 
-            makeDraggable(newStack.div);  
+            makeDraggable(newStack);  
 
             return newStack;
         },
@@ -306,6 +313,45 @@ define(function (require) {
             container.back_objects = [];  
             container.parent = undefined;
             container.showFront = true;
+            container.hoveredStapple = null;
+
+            container.onPlace = function() {
+                if ( container.hoveredStapple) {
+                    getObjectByDiv(container.hoveredStapple).placeOnTop(container);
+                }
+            };
+
+            container.onDrag = function(e) {
+
+                let x = e.clientX,
+                        y = e.clientY,
+                        stack = [],
+                        elementMouseIsOver = document.elementFromPoint(x, y);
+                    
+                    if ( !elementMouseIsOver) return;
+                    stack.push(elementMouseIsOver);
+                    
+                    while (elementMouseIsOver.tagName !== 'HTML'){
+                        
+                        elementMouseIsOver.style.pointerEvents = 'none';
+                        elementMouseIsOver = document.elementFromPoint(x, y);
+                        
+                        stack.push(elementMouseIsOver);
+                    }
+                    
+                    /* Now clean it up */
+                    let i  = 0,
+                        il = stack.length;
+                    
+                    container.hoveredStapple = null;
+                    for (; i < il; i += 1) {
+                        stack[i].style.pointerEvents = '';
+                        if ( stack[i].isStapple) {
+                            container.hoveredStapple = stack[i];
+                        }
+                    }
+
+            }
 
 
             let [newObject,front,back] = createBaseObject(data.type, data);
@@ -359,9 +405,8 @@ define(function (require) {
 
                 }
             }
-            else {
-                makeDraggable(container.div);                
-            }
+
+            makeDraggable(container);   
 
             return container;
         }
